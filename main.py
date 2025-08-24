@@ -38,6 +38,10 @@ def main():
         command = message.text.replace('/', '')
         user_id = message.from_user.id
         buttons = Bot_inline_btns()
+        if db_actions.user_is_admin(user_id):
+            if command == "admin":
+                send_message_with_deletion(user_id, "Добро пожаловать в админ-панель ✅\n\n"
+                "Выберите пункт", reply_markup=buttons.admin_buttons())
         
         if command == "start":
             db_actions.add_user(user_id, message.from_user.first_name, message.from_user.last_name,
@@ -49,10 +53,6 @@ def main():
             "✨ Предложить публикацию — прислать новость, статью или пост для нашего канала.\n"
             "✨ Предложить рекламу — отправить ваше коммерческое предложение на рассмотрение.\n\n"
             "Мы рады продуктивному сотрудничеству!", reply_markup=buttons.start_buttons())
-        
-        if command == "admin":
-            send_message_with_deletion(user_id, "Добро пожаловать в админ-панель ✅\n\n"
-            "Выберите пункт", reply_markup=buttons.admin_buttons())
 
 
     @bot.message_handler(content_types=['text', 'photo'])
@@ -117,7 +117,7 @@ def main():
                 "Пожалуйста, заполните по пунктам и отправьте одним сообщением:\n" \
                 "• Название компании/проекта\n" \
                 "• Ссылка на сайт/соцсети\n" \
-                "• Что вы предлагаете?\n" \
+                "• Какой среднесуточный охват аудитории?\n" \
                 "• Контактные данные для дальнейшей связи\n\n" \
                 "Это ускорит обработку вашей заявки. Мы свяжемся с вами для обсуждения деталей.\n\n")
                 db_actions.set_user_system_key(user_id, "index", 1)
